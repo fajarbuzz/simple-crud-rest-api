@@ -25,6 +25,11 @@ public class NewsController {
 	@Autowired
 	NewsService newsService;
 	
+	@GetMapping(value = "/hello")
+	public String hello() {
+		return "Hello World";
+	}
+	
 	@PostMapping(value = "/create")
 	public ResponseEntity<Map<String, Object>> create(@RequestBody Map<String, Object> params) {
 		Map<String, Object> paramsMap = new HashMap<>();
@@ -38,6 +43,7 @@ public class NewsController {
 					paramsMap = (Map<String, Object>) params.get("params");
 				} else {
 					message.put("params data is empty.");
+					System.out.println("this is new add line");
 				}
 			} else {
 				message.put("params data is null.");
@@ -111,12 +117,12 @@ public class NewsController {
 			descriptionParam =  description;
 		}
 		List<News> newsList = newsService.getNewsList(titleParam, descriptionParam);
-		status = true;
 		if (newsList.size() > 0) {
 			statusCode = HttpStatus.OK;
+			status = true;
 		} else {
 			message.put("no data available.");
-			statusCode = HttpStatus.NO_CONTENT;
+			statusCode = HttpStatus.BAD_GATEWAY;
 		}
 		Map<String, Object> response = new HashMap<>();
 		response.put("data", newsList);
